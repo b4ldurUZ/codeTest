@@ -1,0 +1,9 @@
+{
+  "name": "CondingChallenge",
+  "version": "0.0.1",
+  "dependencies": {
+    "csv-parse": "^2.0.0",
+    "fs": "0.0.1-security",
+    "node-rest-client": "^3.1.0"
+  }
+}
