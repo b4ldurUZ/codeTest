@@ -1,7 +1,7 @@
-var messageSchedule = {};
-var messageList = [];
-var Client = require('node-rest-client').Client;
-var client = new Client();
+let messageSchedule = {};
+let messageList = [];
+let Client = require('node-rest-client').Client;
+let client = new Client();
 
 function addMessageToSchedule(time, messageKey) {
     messageSchedule[time] = messageSchedule[time] || [];
@@ -14,25 +14,25 @@ function addMessageToList(message) {
 }
 
 function readMessageInformation() {
-    var fs = require('fs');
+    let fs = require('fs');
     //Read file with sync read, because we actually want to build the schedule on startup
-    var input = new fs.readFileSync('customers.csv');
-    var csv = require('csv-parse/lib/sync');
-    var buffer = csv(input, {columns: true});
-    for( var j = 0, size = buffer.length; j < size; j++) {
-        var messageIndex = addMessageToList(buffer[j].email+";"+buffer[j].text+";false");
-        var schedule = buffer[j].schedule;
-        var times = schedule.split("-");
-        for (var i = 0, len = times.length; i < len; i++ ) {
-            var regex = /\d*/;
-            var time = times[i].match(regex);
+    let input = new fs.readFileSync('customers.csv');
+    let csv = require('csv-parse/lib/sync');
+    let buffer = csv(input, {columns: true});
+    for( let j = 0, size = buffer.length; j < size; j++) {
+        let messageIndex = addMessageToList(buffer[j].email+";"+buffer[j].text+";false");
+        let schedule = buffer[j].schedule;
+        let times = schedule.split("-");
+        for (let i = 0, len = times.length; i < len; i++ ) {
+            let regex = /\d*/;
+            let time = times[i].match(regex);
             addMessageToSchedule(time, messageIndex);
         }
     }
 }
 
 function retrieveMessageList(indices) {
-    var messages = [];
+    let messages = [];
     for(index in indices) {
         if(indices.hasOwnProperty(index)) {
             messages.push(messageList[indices[index]]);
@@ -42,13 +42,13 @@ function retrieveMessageList(indices) {
 }
 
 function billPaid(message) {
-    var index = messageList.indexOf(message+";false");
+    let index = messageList.indexOf(message+";false");
     messageList[index] = message+";true";
 }
 
 function sendMessage(args,time) {
     setTimeout(function () {
-        var checkMessage = args.data.email+";"+args.data.text+";false";
+        let checkMessage = args.data.email+";"+args.data.text+";false";
         if(messageList.indexOf(checkMessage) !== -1) {
             client.post("http://localhost:9090/messages",
                 args,
@@ -71,15 +71,15 @@ function sendMessage(args,time) {
 }
 
 function scheduleMessages() {
-    for(var time in messageSchedule) {
+    for(let time in messageSchedule) {
         if(messageSchedule.hasOwnProperty(time)) {
-            var messageIndices = messageSchedule[time];
-            var messages = retrieveMessageList(messageIndices);
-            for (var key in messages) {
+            let messageIndices = messageSchedule[time];
+            let messages = retrieveMessageList(messageIndices);
+            for (let key in messages) {
                 if (messages.hasOwnProperty(key)) {
-                    var message = messages[key];
-                    var items = message.split(";");
-                    var args = {
+                    let message = messages[key];
+                    let items = message.split(";");
+                    let args = {
                         data: {"email": items[0], "text": items[1]},
                         headers: {"Content-Type": "application/json"}
                     };
