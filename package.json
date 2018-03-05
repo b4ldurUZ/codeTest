@@ -5,5 +5,16 @@
     "csv-parse": "^2.0.0",
     "fs": "0.0.1-security",
     "node-rest-client": "^3.1.0"
+  },
+  "main": "CodingChallenge.js",
+  "scripts": {
+    "test": "mocha"
+  },
+  "devDependencies": {
+    "chai": "^4.1.2",
+    "eslint": "^4.18.1",
+    "eslint-config-google": "^0.9.1",
+    "mocha": "^5.0.1",
+    "rewire": "^3.0.2"
   }
 }
