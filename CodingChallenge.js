@@ -1,6 +1,13 @@
 // Node rest-client, required to send messages to the API-Endpoint
-const Client = require('node-rest-client').Client;
+import { Client } from 'node-rest-client';
 const client = new Client();
+import { Filesystem } from 'fs';
+const fs = new Filesystem();
+import { Csv } from 'csv-parse/lib/sync';
+const csv = new Csv();
+import { Hystrix } from 'hystrixjs';
+const hystrix = new Hystrix();
+const CommandsFactory = hystrix.CommandsFactory;
 
 /* Schedule, time as key, message-indices in an array as value*/
 let messageSchedule = {};
@@ -19,10 +26,8 @@ function addMessageToList(message) {
 }
 
 function readMessageInformation() {
-    let fs = require('fs');
     //Read file with sync read, because we actually want to build the schedule on startup
     let input = new fs.readFileSync('customers.csv');
-    let csv = require('csv-parse/lib/sync');
     let buffer = csv(input, {columns: true});
     // Build 2 maps, messageSchedule and messageList
     for( let j = 0, size = buffer.length; j < size; j++) {
